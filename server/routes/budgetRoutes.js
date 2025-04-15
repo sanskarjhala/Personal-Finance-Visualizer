@@ -5,7 +5,7 @@ const Budget = require("../models/Budget");
 router.post("/create-budget", async (req, res) => {
   try {
     const { category, month, amount } = req.body;
-    console.log(req.body)
+    // console.log(req.body)
     if (!category || !month || typeof amount !== "number") {
       return res.status(400).json({ message: "Invalid input" });
     }

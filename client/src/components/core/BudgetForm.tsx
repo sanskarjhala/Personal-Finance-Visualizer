@@ -24,7 +24,7 @@ export const BudgetForm: React.FC<BudgetFormProps> = ({ onSubmit }) => {
   });
 
   const handleFormSubmit = (data: Budget) => {
-    console.log("BUDGET FORM DATA  " ,   data)
+    // console.log("BUDGET FORM DATA  " ,   data)
     onSubmit(data);
     reset(); // clear the form after submit
   };

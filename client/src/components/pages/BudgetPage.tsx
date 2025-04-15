@@ -32,7 +32,7 @@ export default function BudgetPage() {
 
   const fetchBudgets = async () => {
     const res: any = await axios.get(`${baseUrl}/api/budget?month=` + month);
-    console.log("Budget fetched", res.data.budgets);
+    // console.log("Budget fetched", res.data.budgets);
     setBudgets(res.data.budgets);
   };
 
@@ -40,7 +40,7 @@ export default function BudgetPage() {
     const res: any = await axios.get(
       `${baseUrl}/api/transactions?month=` + month
     );
-    console.log("Transactions fetched");
+    // console.log("Transactions fetched");
     setTransactions(res.data.data);
   };
 
