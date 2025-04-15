@@ -19,6 +19,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { BudgetForm } from "../core/BudgetForm";
+import toast from "react-hot-toast";
 const baseUrl = import.meta.env.VITE_API_BASE_URL;
 
 export default function BudgetPage() {
@@ -78,7 +79,9 @@ export default function BudgetPage() {
   };
 
   const handleBudgetSubmit = async (data: Budget) => {
-    await axios.post(`${baseUrl}/api/budget/create-budget`, data);
+    const res:any = await axios.post(`${baseUrl}/api/budget/create-budget`, data);
+    if(res.status == 200) toast.success("Created")
+    else toast.error("Failed") 
     fetchBudgets();
   };
 
