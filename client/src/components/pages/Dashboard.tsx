@@ -2,18 +2,28 @@ import { useState, useEffect } from "react";
 import { Transaction } from "../core/types";
 import axios from "axios";
 import { Card, CardContent } from "@/components/ui/card";
-import { PieChart, Pie, Cell, Tooltip, Legend } from "recharts"; // For Pie Chart
+import {
+  PieChart,
+  Pie,
+  Cell,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+} from "recharts"; // For Pie Chart
 import { Button } from "@/components/ui/button";
 import TransactionList from "../core/TransactionList";
 import { Link } from "react-router-dom";
 import MonthlyExpensesChart from "../core/MonthlyExpenseChart";
 
-
 export default function Dashboard() {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
-  const [categoryData, setCategoryData] = useState<{ name: string; value: number }[]>([]);
+  const [categoryData, setCategoryData] = useState<
+    { name: string; value: number }[]
+  >([]);
   const [totalExpenses, setTotalExpenses] = useState(0);
-  const [latestTransactions, setLatestTransactions] = useState<Transaction[]>([]);
+  const [latestTransactions, setLatestTransactions] = useState<Transaction[]>(
+    []
+  );
   const baseUrl = import.meta.env.VITE_API_BASE_URL;
   // Fetch transactions from API
   const fetchTransactions = async () => {
@@ -26,7 +36,12 @@ export default function Dashboard() {
       }
 
       // Calculate total expenses
-      setTotalExpenses(fetchedTransactions.reduce((acc: number, tx: Transaction) => acc + tx.amount, 0));
+      setTotalExpenses(
+        fetchedTransactions.reduce(
+          (acc: number, tx: Transaction) => acc + tx.amount,
+          0
+        )
+      );
 
       // Sort transactions and get the latest 5
       const sorted = [...fetchedTransactions].sort(
@@ -37,7 +52,8 @@ export default function Dashboard() {
       // Category Breakdown for Pie Chart
       const categoryBreakdown: { [key: string]: number } = {};
       fetchedTransactions.forEach((tx) => {
-        categoryBreakdown[tx.category] = (categoryBreakdown[tx.category] || 0) + tx.amount;
+        categoryBreakdown[tx.category] =
+          (categoryBreakdown[tx.category] || 0) + tx.amount;
       });
 
       setCategoryData(
@@ -76,24 +92,29 @@ export default function Dashboard() {
         <Card className="shadow-md my-4">
           <CardContent className="p-4">
             <h3 className="text-lg font-semibold"></h3>
-            <TransactionList transactions={latestTransactions} onEdit={() => {}} onDelete={() => {}} limit={5} description="" editDeleteButton={false}/>
+            <TransactionList
+              transactions={latestTransactions}
+              onEdit={() => {}}
+              onDelete={() => {}}
+              limit={5}
+              description=""
+              editDeleteButton={false}
+            />
           </CardContent>
         </Card>
 
         {/* All Transactions Button */}
-      <div className="mx-auto my-4 ">
-        <Link to={"/all-transactions"}>
-        <Button className="p-4">
-          View All Transactions
-        </Button>
-        </Link>
-      </div>
+        <div className="mx-auto my-4 ">
+          <Link to={"/all-transactions"}>
+            <Button className="p-4">View All Transactions</Button>
+          </Link>
+        </div>
 
-         {/* Monthly expense Chart */}
-         <Card className="shadow-md">
+        {/* Monthly expense Chart */}
+        <Card className="shadow-md">
           <CardContent className="p-4">
             <h3 className="text-lg font-semibold">Most Recent Transactions</h3>
-             <MonthlyExpensesChart transactions={transactions} />
+            <MonthlyExpensesChart transactions={transactions} />
           </CardContent>
         </Card>
 
@@ -101,31 +122,35 @@ export default function Dashboard() {
         <Card className="shadow-md my-4">
           <CardContent className="p-4">
             <h3 className="text-lg font-semibold">Category Breakdown</h3>
-            <div className="flex items-center justify-center h-80 w-full">
-              <PieChart width={400} height={400}>
-                <Pie
-                  data={categoryData}
-                  dataKey="value"
-                  nameKey="name"
-                  outerRadius={80}
-                  fill="#8884d8"
-                  label
-                >
-                  {categoryData.map((_, index) => (
-                    <Cell key={`cell-${index}`} fill={`hsl(${index * 50}, 70%, 60%)`} />
-                  ))}
-                </Pie>
-                <Tooltip />
-                <Legend />
-              </PieChart>
+            <div
+              className="flex items-center justify-center w-full"
+              style={{ height: "20rem" }}
+            >
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie
+                    data={categoryData}
+                    dataKey="value"
+                    nameKey="name"
+                    outerRadius="60%"
+                    fill="#8884d8"
+                    label
+                  >
+                    {categoryData.map((_, index) => (
+                      <Cell
+                        key={`cell-${index}`}
+                        fill={`hsl(${index * 50}, 70%, 60%)`}
+                      />
+                    ))}
+                  </Pie>
+                  <Tooltip />
+                  <Legend />
+                </PieChart>
+              </ResponsiveContainer>
             </div>
           </CardContent>
         </Card>
-
-       
       </div>
-
-      
     </div>
   );
 }
